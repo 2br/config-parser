@@ -34,20 +34,19 @@ static char* trim(char* str) {
  * - true/false
  * - enabled/disabled
  */
-static int config_bool_variations(const char* str) {
+static bool config_bool_variations(const char* str) {
 	if (_stricmp(str, "on") == 0 || _stricmp(str, "yes") == 0 || _stricmp(str, "true") == 0 || _stricmp(str, "enabled") == 0)
-		return 1;
+		return true;
 	if (_stricmp(str, "off") == 0 || _stricmp(str, "no") == 0 || _stricmp(str, "false") == 0 || _stricmp(str, "disabled") == 0)
-		return 0;
-	return 0;
+		return false;
+	return false;
 }
 
 
 /**
  * Commented lines
  */
-static bool is_valid_line(char* line)
-{
+static bool is_valid_line(char* line) {
 	int i = 0;
 	// Start with # so... is commented
 	if ('#' == line[0]) {
@@ -86,17 +85,11 @@ static bool is_valid_line(char* line)
 	return true;
 }
 
-const char* config_get_error_message(config_result_code code) {
-	switch (code) {
-	case CONF_SUCCESS: return "Success";
-	case CONF_ERR_FILE_NOT_FOUND: return "File not found";
-	case CONF_INVALID_TYPE: return "Invalid type";
-	case CONF_NULL_POINTER: return "Null pointer or not provided";
-	default: return "Unknown error";
-	}
-}
 
-void config_init(struct s_config_data configurations[], int config_arr_size) {
+/**
+ * Init configs and set the default value
+ */
+void config_set_defaults(struct s_config_data configurations[], int config_arr_size) {
 	int i;
 	for (i = 0; i < config_arr_size; ++i) {
 		config_set_value(&configurations[i], configurations[i].default_value);
@@ -117,7 +110,7 @@ int config_read_file(const char* file_name, struct s_config_data configurations[
 
 	// First execution
 	if( run_count == 0 ) {
-		config_init(configurations, config_arr_size);
+		config_set_defaults(configurations, config_arr_size);
 	}
 
 	run_count++;
@@ -130,6 +123,8 @@ int config_read_file(const char* file_name, struct s_config_data configurations[
 		if (!is_valid_line(line)) {
 			continue;
 		}
+		
+		// Try to match ':' first
 		if (sscanf(line, "%1023[^:]:%1023[^\n]", w1, w2) != 2) {
 			continue;
 		}
@@ -159,8 +154,6 @@ int config_read_file(const char* file_name, struct s_config_data configurations[
 	return CONF_SUCCESS;
 }
 
-
-
 /**
  * Set value of config specif configuration entry, does the type parsing
  */
@@ -177,7 +170,7 @@ int config_set_value(struct s_config_data *config, const char* value)
 	}
 	switch( config->type ) {
 	case CDT_BOOL:
-		((char*)(config->value)) = (char)config_bool_variations(value);
+		*((bool*)config->value) = config_bool_variations(value);
 		break;
 
 	case CDT_STRING:
@@ -202,4 +195,14 @@ int config_set_value(struct s_config_data *config, const char* value)
 		return CONF_INVALID_TYPE;
 	}
 	return CONF_SUCCESS;
+}
+
+const char* config_get_error_message(config_result_code code) {
+	switch (code) {
+	case CONF_SUCCESS: return "Success";
+	case CONF_ERR_FILE_NOT_FOUND: return "File not found";
+	case CONF_INVALID_TYPE: return "Invalid type";
+	case CONF_NULL_POINTER: return "Null pointer or not provided";
+	default: return "Unknown error";
+	}
 }
