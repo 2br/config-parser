@@ -85,7 +85,20 @@ static bool is_valid_line(char* line) {
 	return true;
 }
 
+static bool parse_line(const char *line, char *key, char *value) {
+    // Try to match ':' first
+    if (sscanf(line, "%1023[^:]:%1023[^\n]", key, value) == 2) {
+        return true;
+    }
+    
+    // If ':' not found, try '='
+    if (sscanf(line, "%1023[^=]=%1023[^\n]", key, value) == 2) {
+        return true;
+    }
 
+    // Nothing here
+	return false;
+}
 /**
  * Init configs and set the default value
  */
@@ -120,15 +133,16 @@ int config_read_file(const char* file_name, struct s_config_data configurations[
 		return CONF_ERR_FILE_NOT_FOUND;
 	}
 	while (fgets(line, sizeof(line), fp)) {
+		// Commented or empty line
 		if (!is_valid_line(line)) {
 			continue;
 		}
 		
-		// Try to match ':' first
-		if (sscanf(line, "%1023[^:]:%1023[^\n]", w1, w2) != 2) {
+		// Will try to parse and retrieve values
+		if ( !parse_line(line, w1, w2) ) {
 			continue;
 		}
-		
+			
 		key	  = trim(w1);
 		value = trim(w2);
 		// Handle import directive (new file)
