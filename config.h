@@ -12,8 +12,6 @@ typedef enum config_data_type {
 typedef enum {
 	CONF_SUCCESS = 0,
 	CONF_ERR_FILE_NOT_FOUND,
-	CONF_INVALID_INPUT,
-	CONF_ERR_MEMORY_ALLOCATION,
 	CONF_INVALID_TYPE,
 	CONF_NULL_POINTER
 } config_result_code;

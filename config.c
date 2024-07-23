@@ -89,11 +89,9 @@ static bool is_valid_line(char* line)
 const char* config_get_error_message(config_result_code code) {
 	switch (code) {
 	case CONF_SUCCESS: return "Success";
-	case CONF_INVALID_INPUT: return "File not found";
-	case CONF_ERR_MEMORY_ALLOCATION: return "Memory allocation failed";
+	case CONF_ERR_FILE_NOT_FOUND: return "File not found";
 	case CONF_INVALID_TYPE: return "Invalid type";
 	case CONF_NULL_POINTER: return "Null pointer or not provided";
-		// Add more cases as needed
 	default: return "Unknown error";
 	}
 }
