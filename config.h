@@ -1,5 +1,5 @@
 #pragma once
-
+#include <stdlib.h>
 typedef enum config_data_type {
 	CDT_BOOL,
 	CDT_SHORT,
@@ -41,7 +41,11 @@ struct s_config_data {
 #define CONFIG_DEFB(name, variable, defval) { name, variable, 0, CDT_BOOL, defval }
 
 
+// Set the default values (will run in first config_read_file anyway)
+void config_set_defaults(struct s_config_data configurations[], int config_arr_size);
 // Setting multiple configs by a file
 int config_read_file(const char* file_name, struct s_config_data configurations[], int config_arr_size);
 // Set single value
 int config_set_value(struct s_config_data* config, const char* value);
+// Return the message from a error code
+const char* config_get_error_message(config_result_code code);
