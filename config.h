@@ -31,8 +31,9 @@ struct s_config_data {
 /**
  * Macros to simplify setting configs
  */
-// Numbers
-#define CONFIG_DEF(name, variable, type, defval) { name, variable, 0, type, defval }
+#define CONFIG_DEF(name, variable, type) { name, variable, 0, type, "" }
+// Numbers with default
+#define CONFIG_DEFD(name, variable, type, defval) { name, variable, 0, type, defval }
 // String
 #define CONFIG_DEFS(name, variable, size, defval) { name, variable, size, CDT_STRING, defval }
 // Integer
