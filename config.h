@@ -28,12 +28,18 @@ struct s_config_data {
 #define ARRAYLENGTH(A) ( sizeof(A)/sizeof((A)[0]) )
 #endif
 
+/**
+ * Macros to simplify setting configs
+ */
 // Numbers
 #define CONFIG_DEF(name, variable, type, defval) { name, variable, 0, type, defval }
 // String
 #define CONFIG_DEFS(name, variable, size, defval) { name, variable, size, CDT_STRING, defval }
-
+// Integer
 #define CONFIG_DEFI(name, variable, defval) { name, variable, 0, CDT_INT, defval }
+// Bool
+#define CONFIG_DEFB(name, variable, defval) { name, variable, 0, CDT_BOOL, defval }
+
 
 // Setting multiple configs by a file
 int config_read_file(const char* file_name, struct s_config_data configurations[], int config_arr_size);
