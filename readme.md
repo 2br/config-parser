@@ -7,3 +7,6 @@ Config-parser is a lightweight C project designed to read and process configurat
 - Parses key-value pairs separated by colons
 - Skips commented lines starting with //
 - Handles empty lines and lines with leading spaces
+
+
+>> Config parser criado devido a necessidade de configurar variaveis sem alocação dinâmica e de forma simples e para ser rápido e com um formato unificado.
